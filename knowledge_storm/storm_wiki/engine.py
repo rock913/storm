@@ -59,7 +59,7 @@ class STORMWikiLMConfigs(LMConfigs):
             "api_provider": "openai",
             "temperature": temperature,
             "top_p": top_p,
-            "api_base": None,
+            "api_base": api_base,
         }
         if openai_type and openai_type == "openai":
             self.conv_simulator_lm = OpenAIModel(

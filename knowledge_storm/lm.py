@@ -26,10 +26,12 @@ class OpenAIModel(dspy.OpenAI):
         self,
         model: str = "gpt-4o-mini",
         api_key: Optional[str] = None,
+        api_base: Optional[str] = None,
         model_type: Literal["chat", "text"] = None,
         **kwargs,
     ):
-        super().__init__(model=model, api_key=api_key, model_type=model_type, **kwargs)
+        super().__init__(model=model, api_key=api_key, model_type=model_type,  api_base=api_base, **kwargs)
+        self.api_base = api_base
         self._token_usage_lock = threading.Lock()
         self.prompt_tokens = 0
         self.completion_tokens = 0
