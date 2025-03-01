@@ -7,7 +7,6 @@ from demo_util import DemoFileIOHelper, DemoTextProcessingHelper, DemoUIHelper, 
 
 def handle_not_started():
     if st.session_state["page3_write_article_state"] == "not started":
-
         _, search_form_column, _ = st.columns([2, 5, 2])
         with search_form_column:
             with st.form(key='search_form'):
@@ -19,6 +18,7 @@ def handle_not_started():
 
                 # Submit button for the form
                 submit_button = st.form_submit_button(label='Research')
+                print('line 25',submit_button,st.session_state)
                 # only start new search when button is clicked, not started, or already finished previous one
                 if submit_button and st.session_state["page3_write_article_state"] in ["not started", "show results"]:
                     if not st.session_state["page3_topic"].strip():

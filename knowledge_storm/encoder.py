@@ -18,8 +18,9 @@ class OpenAIEmbeddingModel(EmbeddingModel):
     def __init__(self, model: str = "text-embedding-3-small", api_key: str = None):
         if not api_key:
             api_key = os.getenv("OPENAI_API_KEY")
+            api_base = os.getenv("OPENAI_API_BASE")
 
-        self.url = "https://api.openai.com/v1/embeddings"
+        self.url = f"{api_base}embeddings"
         self.headers = {
             "Content-Type": "application/json",
             "Authorization": f"Bearer {api_key}",

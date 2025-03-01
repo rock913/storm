@@ -48,7 +48,7 @@ class CollaborativeStormLMConfigs(LMConfigs):
                 "api_provider": "openai",
                 "temperature": temperature,
                 "top_p": top_p,
-                "api_base": None,
+                "api_base": os.getenv("OPENAI_API_BASE"),
             }
             self.question_answering_lm = OpenAIModel(
                 model="gpt-4o-2024-05-13", max_tokens=1000, **openai_kwargs
@@ -546,14 +546,16 @@ class CoStormRunner:
         }
 
     @classmethod
-    def from_dict(cls, data):
+    def from_dict(cls, data,lm_config=None,rm=None):
         # FIXME: does not use the lm_config data but naively use default setting
-        lm_config = CollaborativeStormLMConfigs()
-        lm_config.init(lm_type=os.getenv("OPENAI_API_TYPE"))
+        if lm_config is None:
+            lm_config = CollaborativeStormLMConfigs()
+            lm_config.init(lm_type=os.getenv("OPENAI_API_TYPE"))
         costorm_runner = cls(
             lm_config=lm_config,
             runner_argument=RunnerArgument.from_dict(data["runner_argument"]),
             logging_wrapper=LoggingWrapper(lm_config),
+            rm=rm
         )
         costorm_runner.conversation_history = [
             ConversationTurn.from_dict(turn) for turn in data["conversation_history"]
@@ -590,7 +592,7 @@ class CoStormRunner:
                     rm=self.rm,
                     callback_handler=self.callback_handler,
                 )
-
+                print('Line 593: collaborative_storm/engine.py:WarmStartModule',)
                 warmstart_conv, warmstart_revised_conv, warmstart_experts = (
                     warm_start_module.initiate_warm_start(
                         topic=self.runner_argument.topic,

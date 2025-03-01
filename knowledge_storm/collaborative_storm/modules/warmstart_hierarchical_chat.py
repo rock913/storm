@@ -157,11 +157,13 @@ class WarmStartConversation(dspy.Module):
     def generate_warmstart_experts(self, topic: str):
         background_seeking_dialogue = self.get_background_info(topic=topic)
         background_info = background_seeking_dialogue.utterance
+        print('Line 159: warmstart_hier_chat.py:background_info',background_info)
         gen_expert_output = self.generate_experts_module(
             topic=topic,
             background_info=background_info,
             num_experts=self.max_num_experts,
         )
+        print('Line 166: warmstart_hier_chat.py:gen_expert_output.experts',gen_expert_output.experts)
         return gen_expert_output.experts, background_seeking_dialogue
 
     def get_background_info(self, topic: str):
@@ -199,45 +201,45 @@ class WarmStartConversation(dspy.Module):
                 with self.logging_wrapper.log_event(
                     f"warm start, perspective guided QA: expert {expert_name}; turn {idx + 1}"
                 ):
-                    try:
-                        with lock:
-                            history = self.format_dialogue_question_history_string(
-                                conversation_history
-                            )
-                        with dspy.settings.context(lm=self.question_asking_lm):
-                            question = self.ask_question(
-                                topic=topic, history=history, current_expert=expert
-                            ).question
-                        answer = self.answer_question_module(
-                            topic=topic,
-                            question=question,
-                            mode="brief",
-                            style="conversational",
+                    # try:
+                    with lock:
+                        history = self.format_dialogue_question_history_string(
+                            conversation_history
                         )
-                        conversation_turn = ConversationTurn(
-                            role=expert,
-                            claim_to_make=question,
-                            raw_utterance=answer.response,
-                            utterance_type="Support",
-                            queries=answer.queries,
-                            raw_retrieved_info=answer.raw_retrieved_info,
-                            cited_info=answer.cited_info,
-                        )
-                        if self.callback_handler is not None:
-                            self.callback_handler.on_warmstart_update(
-                                message="\n".join(
-                                    [
-                                        f"Finish browsing {url}"
-                                        for url in [
-                                            i.url for i in answer.raw_retrieved_info
-                                        ]
+                    with dspy.settings.context(lm=self.question_asking_lm):
+                        question = self.ask_question(
+                            topic=topic, history=history, current_expert=expert
+                        ).question
+                    answer = self.answer_question_module(
+                        topic=topic,
+                        question=question,
+                        mode="brief",
+                        style="conversational",
+                    )
+                    conversation_turn = ConversationTurn(
+                        role=expert,
+                        claim_to_make=question,
+                        raw_utterance=answer.response,
+                        utterance_type="Support",
+                        queries=answer.queries,
+                        raw_retrieved_info=answer.raw_retrieved_info,
+                        cited_info=answer.cited_info,
+                    )
+                    if self.callback_handler is not None:
+                        self.callback_handler.on_warmstart_update(
+                            message="\n".join(
+                                [
+                                    f"Finish browsing {url}"
+                                    for url in [
+                                        i.url for i in answer.raw_retrieved_info
                                     ]
-                                )
+                                ]
                             )
-                        with lock:
-                            conversation_history.append(conversation_turn)
-                    except Exception as e:
-                        print(f"Error processing expert {expert}: {e}")
+                        )
+                    with lock:
+                        conversation_history.append(conversation_turn)
+                    # except Exception as e:
+                    #     print(f"Error processing expert {expert}: {e}")
 
         # multi-thread conversation
         with concurrent.futures.ThreadPoolExecutor(
@@ -365,7 +367,9 @@ class WarmStartModule:
                 self.callback_handler.on_warmstart_update(
                     message="Start getting familiar with the topic by chatting with multiple LLM experts (Step 1 / 4)"
                 )
+            print("line 368: modules/warmstart_hierarchical_chat.py")
             warm_start_result = self.warmstart_conv(topic=topic)
+            print("line 370: modules/warmstart_hierarchical_chat.py")
             warm_start_conversation_history = warm_start_result.conversation_history
             warm_start_experts = warm_start_result.experts
 
