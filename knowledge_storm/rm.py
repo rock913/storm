@@ -7,6 +7,12 @@ import dspy
 import requests
 from dsp import backoff_hdlr, giveup_hdlr
 
+from langchain_huggingface import HuggingFaceEmbeddings
+from langchain_qdrant import Qdrant
+from qdrant_client import QdrantClient
+
+import time
+
 from .utils import WebPageHelper
 
 
@@ -58,7 +64,7 @@ class YouRM(dspy.Retrieve):
             try:
                 headers = {"X-API-Key": self.ydc_api_key}
                 results = requests.get(
-                    f"https://api.ydc-index.io/search?query={query}",
+                    f"https://api.ydc-index.io/search?query=Search for Scientific Research Articles on {query}",
                     headers=headers,
                 ).json()
 
@@ -1234,5 +1240,138 @@ class AzureAISearch(dspy.Retrieve):
                     collected_results.append(document)
             except Exception as e:
                 logging.error(f"Error occurs when searching query {query}: {e}")
+
+        return collected_results
+
+
+class SemanticScholarRM(dspy.Retrieve):
+    """Retrieve information from Semantic Scholar using its API."""
+
+    def __init__(
+        self,
+        semantic_scholar_api_key=None,
+        k=3,
+        is_valid_source: Callable = None,
+        max_retries=100,  # 最大重试次数
+        retry_backoff=5,  # 重试退避时间
+        min_citation_count=5,  # 默认筛选至少有5次引用的论文
+        publication_date_or_year="2020-",  # 默认筛选2020年之后的论文
+    ):
+        """
+        Params:
+            semantic_scholar_api_key (str, optional): API key for Semantic Scholar. If not provided, it will look for the environment variable SEMANTIC_SCHOLAR_API_KEY.
+            k (int, optional): Number of top results to retrieve per query. Defaults to 3.
+            is_valid_source (Callable, optional): Function to validate source URLs. Defaults to accepting all sources.
+            max_retries (int, optional): The maximum number of retries for failed requests. Defaults to 5.
+            retry_backoff (int, optional): The backoff time in seconds for retries. Defaults to 2.
+            min_citation_count (int, optional): The minimum number of citations for papers to be considered high-quality (default: 10).
+            publication_date_or_year (str, optional): The date range for the paper's publication (default: "2018:2023").
+        """
+        super().__init__(k=k)
+        self.max_retries = max_retries
+        self.retry_backoff = retry_backoff
+        self.min_citation_count = min_citation_count
+        self.publication_date_or_year = publication_date_or_year
+
+        # Load the API key, either from the argument or environment variable
+        self.semantic_scholar_api_key = semantic_scholar_api_key or os.getenv("SEMANTIC_SCHOLAR_API_KEY")
+        if not self.semantic_scholar_api_key:
+            raise RuntimeError(
+                "You must supply semantic_scholar_api_key or set environment variable SEMANTIC_SCHOLAR_API_KEY"
+            )
+
+        self.endpoint = "https://api.semanticscholar.org/graph/v1/paper/search"
+        self.headers = {
+            "Authorization": f"Bearer {self.semantic_scholar_api_key}"  # 使用Authorization头
+        }
+        self.usage = 0
+
+        # Set is_valid_source function (default allows all URLs)
+        self.is_valid_source = is_valid_source or (lambda x: True)
+
+    def get_usage_and_reset(self):
+        """Reset the usage counter and return the current usage"""
+        usage = self.usage
+        self.usage = 0
+        return {"SemanticScholarRM": usage}
+
+    def _make_request(self, params: dict):
+        """Helper function to make the API request with retries"""
+        for attempt in range(self.max_retries):
+            try:
+                print("rm.py: line 1290")
+                response = requests.get(self.endpoint, headers=self.headers, params=params)
+                response.raise_for_status()  # Raise an exception for 4xx/5xx responses
+                print("rm.py: line 1293:len(response.json()) ",len(response.json().get("data", [])))
+                return response.json().get("data", [])
+            except requests.exceptions.HTTPError as e:
+                print("rm.py: line 1295")
+                logging.error(f"HTTP error occurred: {e}")
+                if response.status_code == 403:
+                    logging.error("Forbidden: Check your API key and permissions.")
+                elif response.status_code == 429:
+                    # Handle rate limiting (status 429)
+                    logging.warning(f"Rate limit exceeded, retrying in {self.retry_backoff} seconds...")
+                    time.sleep(self.retry_backoff)
+                else:
+                    logging.error(f"Error occurred while making request: {e}")
+            except requests.exceptions.RequestException as e:
+                logging.error(f"Request exception occurred: {e}")
+            
+            # Backoff for retries
+            if attempt < self.max_retries - 1:
+                print("rm.py: line 1310：attempt:", attempt)
+                time.sleep(self.retry_backoff)
+            else:
+                logging.error(f"Max retries reached for request. Failing gracefully.")
+                raise
+
+    def forward(
+        self, query_or_queries: Union[str, List[str]], exclude_urls: List[str] = []
+    ):
+        """Search with Semantic Scholar for top k papers for query or queries.
+
+        Args:
+            query_or_queries (Union[str, List[str]]): The query or queries to search for.
+            exclude_urls (List[str]): A list of URLs to exclude from the search results.
+
+        Returns:
+            a list of Dicts, each dict has keys of 'description', 'snippets' (list of strings), 'title', 'url', and 'meta'
+        """
+        queries = [query_or_queries] if isinstance(query_or_queries, str) else query_or_queries
+        self.usage += len(queries)
+        collected_results = []
+
+        for query in queries:
+            try:
+                print("Line 1335: rm.py, query:",query)
+                params = {
+                    "query": query,
+                    "limit": self.k,
+                    "fields": "title,abstract,url,citationCount,year,journal,tldr",
+                    "minCitationCount": self.min_citation_count,
+                    "publicationDateOrYear": self.publication_date_or_year
+                }
+                results = self._make_request(params)
+
+                for paper in results:
+                    url = paper.get("url", "")
+                    if self.is_valid_source(url) and url not in exclude_urls:
+                        # 筛选引用量大于等于指定值的高质量论文
+                        if int(paper.get("citationCount", 0)) >= self.min_citation_count:
+                            collected_results.append({
+                                "description": paper.get("abstract", ""),
+                                "snippets": [paper.get("abstract", "")],  # 返回摘要作为snippets
+                                "title": paper.get("title", ""),
+                                "url": url,
+                                # "meta": {
+                                #     "year": paper.get("year", ""),
+                                #     "citationCount": paper.get("citationCount", ""),
+                                #     "journal": paper.get("journal", ""),
+                                #     "tldr": paper.get("tldr", "")
+                                # },
+                            })
+            except Exception as e:
+                logging.error(f"Error occurs when searching query '{query}': {e}")
 
         return collected_results

@@ -103,8 +103,19 @@ class ArticleGenerationModule(dspy.Module):
         to_return = []
         for child in knowledge_base.root.children:
             to_return.extend(helper(child, level=1))
+        # 新增参考文献生成
+        references = self._generate_references(knowledge_base)
+        return "\n".join(to_return) + references
 
-        return "\n".join(to_return)
+    def _generate_references(self, knowledge_base):
+        refs = []
+        for info in knowledge_base.info_uuid_to_info_dict.values():
+            if info.citation_uuid and info.url:
+                desc = info.description[:300] if info.description else ""
+                ref_entry = f"[{info.citation_uuid}] [{info.title}]({info.url})  \n*{desc}*"
+                refs.append(ref_entry)
+        print('line 118: refs', refs)
+        return "\n\n## 参考文献\n" + "  \n".join(refs) if refs else ""
 
 
 class WriteSection(dspy.Signature):

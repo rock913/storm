@@ -1,0 +1,512 @@
+{
+  "report generation stage": {
+    "time_usage": {},
+    "lm_usage": {
+      "knowledge_base_lm": {
+        "gpt-4o": {
+          "prompt_tokens": 3949,
+          "completion_tokens": 479
+        }
+      }
+    },
+    "lm_history": [
+      {
+        "prompt": "Your task is to expand a section in the mind map by creating new subsections under the given section.\n    You will be given a list of question and query that are used to collect information.\n    Output should be subsection names where each section should serve as a coherent and themantic organization of information and corresponding citation numbers. These subsection names are preferred to be concise and precise.\n    Output follows the format below:\n    subsection 1\n    subsection 2\n    subsection 3\n\n---\n\nThe section you need to expand: ['root', 'Background Information']\n\nThe collected information:\nQuestion: Background information about fmri brain foundation model\nQuery: What is fMRI brain foundation model?\n\nNow provide the expanded subsection names (If there's no need to expand current section as itself serves good organization, then output None):",
+        "response": {
+          "id": "chatcmpl-At4URg3r1jNnHhcEDO8nct3KJC0vG",
+          "choices": [
+            {
+              "finish_reason": "stop",
+              "index": 0,
+              "logprobs": null,
+              "message": {
+                "content": "None",
+                "refusal": null,
+                "role": "assistant",
+                "audio": null,
+                "function_call": null,
+                "tool_calls": null
+              }
+            }
+          ],
+          "created": 1737688663,
+          "model": "gpt-4o-2024-08-06",
+          "object": "chat.completion",
+          "service_tier": null,
+          "system_fingerprint": "fp_f3927aa00d",
+          "usage": {
+            "completion_tokens": 1,
+            "prompt_tokens": 169,
+            "total_tokens": 170,
+            "completion_tokens_details": {
+              "accepted_prediction_tokens": 0,
+              "audio_tokens": 0,
+              "reasoning_tokens": 0,
+              "rejected_prediction_tokens": 0
+            },
+            "prompt_tokens_details": {
+              "audio_tokens": 0,
+              "cached_tokens": 0
+            }
+          }
+        },
+        "kwargs": {
+          "stringify_request": "{\"temperature\": 1.0, \"max_tokens\": 1000, \"top_p\": 0.9, \"frequency_penalty\": 0, \"presence_penalty\": 0, \"n\": 1, \"model\": \"gpt-4o\", \"messages\": [{\"role\": \"user\", \"content\": \"Your task is to expand a section in the mind map by creating new subsections under the given section.\\n    You will be given a list of question and query that are used to collect information.\\n    Output should be subsection names where each section should serve as a coherent and themantic organization of information and corresponding citation numbers. These subsection names are preferred to be concise and precise.\\n    Output follows the format below:\\n    subsection 1\\n    subsection 2\\n    subsection 3\\n\\n---\\n\\nThe section you need to expand: ['root', 'Background Information']\\n\\nThe collected information:\\nQuestion: Background information about fmri brain foundation model\\nQuery: What is fMRI brain foundation model?\\n\\nNow provide the expanded subsection names (If there's no need to expand current section as itself serves good organization, then output None):\"}]}"
+        },
+        "raw_kwargs": {}
+      },
+      {
+        "prompt": "Your task is to expand a section in the mind map by creating new subsections under the given section.\n    You will be given a list of question and query that are used to collect information.\n    Output should be subsection names where each section should serve as a coherent and themantic organization of information and corresponding citation numbers. These subsection names are preferred to be concise and precise.\n    Output follows the format below:\n    subsection 1\n    subsection 2\n    subsection 3\n\n---\n\nThe section you need to expand: ['root', 'Advancements in Technology', 'AI Models for Brain Decoding', 'Enhancing fMRI Reproducibility', 'Standardization of Methodologies']\n\nThe collected information:\nQuestion: Highlight the importance of establishing standardized methodological guidelines in fMRI research to ensure transparency and improve reproducibility across studies.\nQuery: Benefits of standardizing fMRI methods for reproducibility\n\nQuestion: Highlight the importance of establishing standardized methodological guidelines in fMRI research to ensure transparency and improve reproducibility across studies.\nQuery: Importance of standardized methodological guidelines in fMRI research\n\nNow provide the expanded subsection names (If there's no need to expand current section as itself serves good organization, then output None):",
+        "response": {
+          "id": "chatcmpl-At5BpxwbQvKyV32zhSXn4leuxYzz3",
+          "choices": [
+            {
+              "finish_reason": "stop",
+              "index": 0,
+              "logprobs": null,
+              "message": {
+                "content": "- Guidelines for Methodological Consistency\n- Benefits of Standardization for Reproducibility\n- Importance of Transparency in Research",
+                "refusal": null,
+                "role": "assistant",
+                "audio": null,
+                "function_call": null,
+                "tool_calls": null
+              }
+            }
+          ],
+          "created": 1737691353,
+          "model": "gpt-4o-2024-08-06",
+          "object": "chat.completion",
+          "service_tier": null,
+          "system_fingerprint": "fp_f3927aa00d",
+          "usage": {
+            "completion_tokens": 25,
+            "prompt_tokens": 248,
+            "total_tokens": 273,
+            "completion_tokens_details": {
+              "accepted_prediction_tokens": 0,
+              "audio_tokens": 0,
+              "reasoning_tokens": 0,
+              "rejected_prediction_tokens": 0
+            },
+            "prompt_tokens_details": {
+              "audio_tokens": 0,
+              "cached_tokens": 0
+            }
+          }
+        },
+        "kwargs": {
+          "stringify_request": "{\"temperature\": 1.0, \"max_tokens\": 1000, \"top_p\": 0.9, \"frequency_penalty\": 0, \"presence_penalty\": 0, \"n\": 1, \"model\": \"gpt-4o\", \"messages\": [{\"role\": \"user\", \"content\": \"Your task is to expand a section in the mind map by creating new subsections under the given section.\\n    You will be given a list of question and query that are used to collect information.\\n    Output should be subsection names where each section should serve as a coherent and themantic organization of information and corresponding citation numbers. These subsection names are preferred to be concise and precise.\\n    Output follows the format below:\\n    subsection 1\\n    subsection 2\\n    subsection 3\\n\\n---\\n\\nThe section you need to expand: ['root', 'Advancements in Technology', 'AI Models for Brain Decoding', 'Enhancing fMRI Reproducibility', 'Standardization of Methodologies']\\n\\nThe collected information:\\nQuestion: Highlight the importance of establishing standardized methodological guidelines in fMRI research to ensure transparency and improve reproducibility across studies.\\nQuery: Benefits of standardizing fMRI methods for reproducibility\\n\\nQuestion: Highlight the importance of establishing standardized methodological guidelines in fMRI research to ensure transparency and improve reproducibility across studies.\\nQuery: Importance of standardized methodological guidelines in fMRI research\\n\\nNow provide the expanded subsection names (If there's no need to expand current section as itself serves good organization, then output None):\"}]}"
+        },
+        "raw_kwargs": {}
+      },
+      {
+        "prompt": "Your job is to insert the given information to the knowledge base. The knowledge base is a tree based data structure to organize the collection information. Each knowledge node contains information derived from themantically similar question or intent.\n    You will be presented with the question and query leads to this information, and candidate choices of placement. In these choices, -> denotes parent-child relationship. Note that reasonable may not be in these choices.\n\n    If there exists reasonable choice, output \"Best placement: [choice index]\"; otherwise, output \"No reasonable choice\".\n\n---\n\nQuestion and query leads to this info:\nQuestion: Highlight the importance of establishing standardized methodological guidelines in fMRI research to ensure transparency and improve reproducibility across studies.\nQuery: Benefits of standardizing fMRI methods for reproducibility\n\n\nCandidate placement:\n1: Standardization of Methodologies -> Benefits of Standardization for Reproducibility\n2: Standardization of Methodologies -> Importance of Transparency in Research\n3: Standardization of Methodologies -> Guidelines for Methodological Consistency\n4: Standardization of Methodologies\n\nDecision:",
+        "response": {
+          "id": "chatcmpl-At5CDzMWs4s8folsBRzYCfYBu1yZF",
+          "choices": [
+            {
+              "finish_reason": "stop",
+              "index": 0,
+              "logprobs": null,
+              "message": {
+                "content": "Best placement: 1",
+                "refusal": null,
+                "role": "assistant",
+                "audio": null,
+                "function_call": null,
+                "tool_calls": null
+              }
+            }
+          ],
+          "created": 1737691377,
+          "model": "gpt-4o-2024-08-06",
+          "object": "chat.completion",
+          "service_tier": null,
+          "system_fingerprint": "fp_f3927aa00d",
+          "usage": {
+            "completion_tokens": 5,
+            "prompt_tokens": 221,
+            "total_tokens": 226,
+            "completion_tokens_details": {
+              "accepted_prediction_tokens": 0,
+              "audio_tokens": 0,
+              "reasoning_tokens": 0,
+              "rejected_prediction_tokens": 0
+            },
+            "prompt_tokens_details": {
+              "audio_tokens": 0,
+              "cached_tokens": 0
+            }
+          }
+        },
+        "kwargs": {
+          "stringify_request": "{\"temperature\": 1.0, \"max_tokens\": 1000, \"top_p\": 0.9, \"frequency_penalty\": 0, \"presence_penalty\": 0, \"n\": 1, \"model\": \"gpt-4o\", \"messages\": [{\"role\": \"user\", \"content\": \"Your job is to insert the given information to the knowledge base. The knowledge base is a tree based data structure to organize the collection information. Each knowledge node contains information derived from themantically similar question or intent.\\n    You will be presented with the question and query leads to this information, and candidate choices of placement. In these choices, -> denotes parent-child relationship. Note that reasonable may not be in these choices.\\n\\n    If there exists reasonable choice, output \\\"Best placement: [choice index]\\\"; otherwise, output \\\"No reasonable choice\\\".\\n\\n---\\n\\nQuestion and query leads to this info:\\nQuestion: Highlight the importance of establishing standardized methodological guidelines in fMRI research to ensure transparency and improve reproducibility across studies.\\nQuery: Benefits of standardizing fMRI methods for reproducibility\\n\\n\\nCandidate placement:\\n1: Standardization of Methodologies -> Benefits of Standardization for Reproducibility\\n2: Standardization of Methodologies -> Importance of Transparency in Research\\n3: Standardization of Methodologies -> Guidelines for Methodological Consistency\\n4: Standardization of Methodologies\\n\\nDecision:\"}]}"
+        },
+        "raw_kwargs": {}
+      },
+      {
+        "prompt": "Your job is to insert the given information to the knowledge base. The knowledge base is a tree based data structure to organize the collection information. Each knowledge node contains information derived from themantically similar question or intent.\n    You will be presented with the question and query leads to this information, and candidate choices of placement. In these choices, -> denotes parent-child relationship. Note that reasonable may not be in these choices.\n\n    If there exists reasonable choice, output \"Best placement: [choice index]\"; otherwise, output \"No reasonable choice\".\n\n---\n\nQuestion and query leads to this info:\nQuestion: Highlight the importance of establishing standardized methodological guidelines in fMRI research to ensure transparency and improve reproducibility across studies.\nQuery: Importance of standardized methodological guidelines in fMRI research\n\n\nCandidate placement:\n1: Standardization of Methodologies -> Importance of Transparency in Research\n2: Standardization of Methodologies -> Benefits of Standardization for Reproducibility\n3: Standardization of Methodologies -> Guidelines for Methodological Consistency\n4: Standardization of Methodologies\n\nDecision:",
+        "response": {
+          "id": "chatcmpl-At5CBBtWX4DXNLig1XucmHcdh2y4m",
+          "choices": [
+            {
+              "finish_reason": "stop",
+              "index": 0,
+              "logprobs": null,
+              "message": {
+                "content": "Best placement: 2",
+                "refusal": null,
+                "role": "assistant",
+                "audio": null,
+                "function_call": null,
+                "tool_calls": null
+              }
+            }
+          ],
+          "created": 1737691375,
+          "model": "gpt-4o-2024-08-06",
+          "object": "chat.completion",
+          "service_tier": null,
+          "system_fingerprint": "fp_f3927aa00d",
+          "usage": {
+            "completion_tokens": 5,
+            "prompt_tokens": 220,
+            "total_tokens": 225,
+            "completion_tokens_details": {
+              "accepted_prediction_tokens": 0,
+              "audio_tokens": 0,
+              "reasoning_tokens": 0,
+              "rejected_prediction_tokens": 0
+            },
+            "prompt_tokens_details": {
+              "audio_tokens": 0,
+              "cached_tokens": 0
+            }
+          }
+        },
+        "kwargs": {
+          "stringify_request": "{\"temperature\": 1.0, \"max_tokens\": 1000, \"top_p\": 0.9, \"frequency_penalty\": 0, \"presence_penalty\": 0, \"n\": 1, \"model\": \"gpt-4o\", \"messages\": [{\"role\": \"user\", \"content\": \"Your job is to insert the given information to the knowledge base. The knowledge base is a tree based data structure to organize the collection information. Each knowledge node contains information derived from themantically similar question or intent.\\n    You will be presented with the question and query leads to this information, and candidate choices of placement. In these choices, -> denotes parent-child relationship. Note that reasonable may not be in these choices.\\n\\n    If there exists reasonable choice, output \\\"Best placement: [choice index]\\\"; otherwise, output \\\"No reasonable choice\\\".\\n\\n---\\n\\nQuestion and query leads to this info:\\nQuestion: Highlight the importance of establishing standardized methodological guidelines in fMRI research to ensure transparency and improve reproducibility across studies.\\nQuery: Importance of standardized methodological guidelines in fMRI research\\n\\n\\nCandidate placement:\\n1: Standardization of Methodologies -> Importance of Transparency in Research\\n2: Standardization of Methodologies -> Benefits of Standardization for Reproducibility\\n3: Standardization of Methodologies -> Guidelines for Methodological Consistency\\n4: Standardization of Methodologies\\n\\nDecision:\"}]}"
+        },
+        "raw_kwargs": {}
+      },
+      {
+        "prompt": "Your task is to expand a section in the mind map by creating new subsections under the given section.\n    You will be given a list of question and query that are used to collect information.\n    Output should be subsection names where each section should serve as a coherent and themantic organization of information and corresponding citation numbers. These subsection names are preferred to be concise and precise.\n    Output follows the format below:\n    subsection 1\n    subsection 2\n    subsection 3\n\n---\n\nThe section you need to expand: ['root', 'Advancements in Technology', 'AI Models for Brain Decoding', 'Enhancing fMRI Reproducibility', 'Standardization of Methodologies', 'Benefits of Standardization for Reproducibility']\n\nThe collected information:\nQuestion: Highlight the importance of establishing standardized methodological guidelines in fMRI research to ensure transparency and improve reproducibility across studies.\nQuery: Benefits of standardizing fMRI methods for reproducibility\n\nQuestion: Highlight the importance of establishing standardized methodological guidelines in fMRI research to ensure transparency and improve reproducibility across studies.\nQuery: Importance of standardized methodological guidelines in fMRI research\n\nNow provide the expanded subsection names (If there's no need to expand current section as itself serves good organization, then output None):",
+        "response": {
+          "id": "chatcmpl-At5CEyOz2bzVOauJEymxXyx4IAJzp",
+          "choices": [
+            {
+              "finish_reason": "stop",
+              "index": 0,
+              "logprobs": null,
+              "message": {
+                "content": "None",
+                "refusal": null,
+                "role": "assistant",
+                "audio": null,
+                "function_call": null,
+                "tool_calls": null
+              }
+            }
+          ],
+          "created": 1737691378,
+          "model": "gpt-4o-2024-08-06",
+          "object": "chat.completion",
+          "service_tier": null,
+          "system_fingerprint": "fp_f3927aa00d",
+          "usage": {
+            "completion_tokens": 1,
+            "prompt_tokens": 259,
+            "total_tokens": 260,
+            "completion_tokens_details": {
+              "accepted_prediction_tokens": null,
+              "audio_tokens": null,
+              "reasoning_tokens": null,
+              "rejected_prediction_tokens": null
+            },
+            "prompt_tokens_details": {
+              "audio_tokens": null,
+              "cached_tokens": null
+            }
+          }
+        },
+        "kwargs": {
+          "stringify_request": "{\"temperature\": 1.0, \"max_tokens\": 1000, \"top_p\": 0.9, \"frequency_penalty\": 0, \"presence_penalty\": 0, \"n\": 1, \"model\": \"gpt-4o\", \"messages\": [{\"role\": \"user\", \"content\": \"Your task is to expand a section in the mind map by creating new subsections under the given section.\\n    You will be given a list of question and query that are used to collect information.\\n    Output should be subsection names where each section should serve as a coherent and themantic organization of information and corresponding citation numbers. These subsection names are preferred to be concise and precise.\\n    Output follows the format below:\\n    subsection 1\\n    subsection 2\\n    subsection 3\\n\\n---\\n\\nThe section you need to expand: ['root', 'Advancements in Technology', 'AI Models for Brain Decoding', 'Enhancing fMRI Reproducibility', 'Standardization of Methodologies', 'Benefits of Standardization for Reproducibility']\\n\\nThe collected information:\\nQuestion: Highlight the importance of establishing standardized methodological guidelines in fMRI research to ensure transparency and improve reproducibility across studies.\\nQuery: Benefits of standardizing fMRI methods for reproducibility\\n\\nQuestion: Highlight the importance of establishing standardized methodological guidelines in fMRI research to ensure transparency and improve reproducibility across studies.\\nQuery: Importance of standardized methodological guidelines in fMRI research\\n\\nNow provide the expanded subsection names (If there's no need to expand current section as itself serves good organization, then output None):\"}]}"
+        },
+        "raw_kwargs": {}
+      },
+      {
+        "prompt": "Your task is to expand a section in the mind map by creating new subsections under the given section.\n    You will be given a list of question and query that are used to collect information.\n    Output should be subsection names where each section should serve as a coherent and themantic organization of information and corresponding citation numbers. These subsection names are preferred to be concise and precise.\n    Output follows the format below:\n    subsection 1\n    subsection 2\n    subsection 3\n\n---\n\nThe section you need to expand: ['root', 'Advancements in Technology', 'AI Models for Brain Decoding', 'Enhancing fMRI Reproducibility', 'Advanced Machine Learning for Reproducibility']\n\nThe collected information:\nQuestion: Discuss the potential of leveraging advanced machine learning models to enhance the reproducibility of fMRI experiments by separating overlapping neural events more effectively.\nQuery: enhancing fMRI experiments reproducibility machine learning\n\nQuestion: Discuss the potential of leveraging advanced machine learning models to enhance the reproducibility of fMRI experiments by separating overlapping neural events more effectively.\nQuery: advanced machine learning models fMRI reproducibility\n\nNow provide the expanded subsection names (If there's no need to expand current section as itself serves good organization, then output None):",
+        "response": {
+          "id": "chatcmpl-At5CGeotmMrr0dv9j40vOVkEFaBcT",
+          "choices": [
+            {
+              "finish_reason": "stop",
+              "index": 0,
+              "logprobs": null,
+              "message": {
+                "content": "None",
+                "refusal": null,
+                "role": "assistant",
+                "audio": null,
+                "function_call": null,
+                "tool_calls": null
+              }
+            }
+          ],
+          "created": 1737691380,
+          "model": "gpt-4o-2024-08-06",
+          "object": "chat.completion",
+          "service_tier": null,
+          "system_fingerprint": "fp_f3927aa00d",
+          "usage": {
+            "completion_tokens": 1,
+            "prompt_tokens": 256,
+            "total_tokens": 257,
+            "completion_tokens_details": {
+              "accepted_prediction_tokens": 0,
+              "audio_tokens": 0,
+              "reasoning_tokens": 0,
+              "rejected_prediction_tokens": 0
+            },
+            "prompt_tokens_details": {
+              "audio_tokens": 0,
+              "cached_tokens": 0
+            }
+          }
+        },
+        "kwargs": {
+          "stringify_request": "{\"temperature\": 1.0, \"max_tokens\": 1000, \"top_p\": 0.9, \"frequency_penalty\": 0, \"presence_penalty\": 0, \"n\": 1, \"model\": \"gpt-4o\", \"messages\": [{\"role\": \"user\", \"content\": \"Your task is to expand a section in the mind map by creating new subsections under the given section.\\n    You will be given a list of question and query that are used to collect information.\\n    Output should be subsection names where each section should serve as a coherent and themantic organization of information and corresponding citation numbers. These subsection names are preferred to be concise and precise.\\n    Output follows the format below:\\n    subsection 1\\n    subsection 2\\n    subsection 3\\n\\n---\\n\\nThe section you need to expand: ['root', 'Advancements in Technology', 'AI Models for Brain Decoding', 'Enhancing fMRI Reproducibility', 'Advanced Machine Learning for Reproducibility']\\n\\nThe collected information:\\nQuestion: Discuss the potential of leveraging advanced machine learning models to enhance the reproducibility of fMRI experiments by separating overlapping neural events more effectively.\\nQuery: enhancing fMRI experiments reproducibility machine learning\\n\\nQuestion: Discuss the potential of leveraging advanced machine learning models to enhance the reproducibility of fMRI experiments by separating overlapping neural events more effectively.\\nQuery: advanced machine learning models fMRI reproducibility\\n\\nNow provide the expanded subsection names (If there's no need to expand current section as itself serves good organization, then output None):\"}]}"
+        },
+        "raw_kwargs": {}
+      },
+      {
+        "prompt": "Your task is to expand a section in the mind map by creating new subsections under the given section.\n    You will be given a list of question and query that are used to collect information.\n    Output should be subsection names where each section should serve as a coherent and themantic organization of information and corresponding citation numbers. These subsection names are preferred to be concise and precise.\n    Output follows the format below:\n    subsection 1\n    subsection 2\n    subsection 3\n\n---\n\nThe section you need to expand: ['root', 'Advancements in Technology', 'AI Models for Brain Decoding', 'Recent AI Research in Brain Encoding and Decoding']\n\nThe collected information:\nQuestion: focus to review on recent top research works applying ai on brain encoding and decoding\nQuery: top AI models for brain decoding fMRI studies 2023\n\nQuestion: focus to review on recent top research works applying ai on brain encoding and decoding\nQuery: recent research on AI for brain encoding and decoding using fMRI\n\nNow provide the expanded subsection names (If there's no need to expand current section as itself serves good organization, then output None):",
+        "response": {
+          "id": "chatcmpl-At57PPiXywbRMMrYR8hWE1h4tbaTX",
+          "choices": [
+            {
+              "finish_reason": "stop",
+              "index": 0,
+              "logprobs": null,
+              "message": {
+                "content": "None",
+                "refusal": null,
+                "role": "assistant",
+                "audio": null,
+                "function_call": null,
+                "tool_calls": null
+              }
+            }
+          ],
+          "created": 1737691079,
+          "model": "gpt-4o-2024-08-06",
+          "object": "chat.completion",
+          "service_tier": null,
+          "system_fingerprint": "fp_f3927aa00d",
+          "usage": {
+            "completion_tokens": 1,
+            "prompt_tokens": 235,
+            "total_tokens": 236,
+            "completion_tokens_details": {
+              "accepted_prediction_tokens": 0,
+              "audio_tokens": 0,
+              "reasoning_tokens": 0,
+              "rejected_prediction_tokens": 0
+            },
+            "prompt_tokens_details": {
+              "audio_tokens": 0,
+              "cached_tokens": 0
+            }
+          }
+        },
+        "kwargs": {
+          "stringify_request": "{\"temperature\": 1.0, \"max_tokens\": 1000, \"top_p\": 0.9, \"frequency_penalty\": 0, \"presence_penalty\": 0, \"n\": 1, \"model\": \"gpt-4o\", \"messages\": [{\"role\": \"user\", \"content\": \"Your task is to expand a section in the mind map by creating new subsections under the given section.\\n    You will be given a list of question and query that are used to collect information.\\n    Output should be subsection names where each section should serve as a coherent and themantic organization of information and corresponding citation numbers. These subsection names are preferred to be concise and precise.\\n    Output follows the format below:\\n    subsection 1\\n    subsection 2\\n    subsection 3\\n\\n---\\n\\nThe section you need to expand: ['root', 'Advancements in Technology', 'AI Models for Brain Decoding', 'Recent AI Research in Brain Encoding and Decoding']\\n\\nThe collected information:\\nQuestion: focus to review on recent top research works applying ai on brain encoding and decoding\\nQuery: top AI models for brain decoding fMRI studies 2023\\n\\nQuestion: focus to review on recent top research works applying ai on brain encoding and decoding\\nQuery: recent research on AI for brain encoding and decoding using fMRI\\n\\nNow provide the expanded subsection names (If there's no need to expand current section as itself serves good organization, then output None):\"}]}"
+        },
+        "raw_kwargs": {}
+      },
+      {
+        "prompt": "Your task is to expand a section in the mind map by creating new subsections under the given section.\n    You will be given a list of question and query that are used to collect information.\n    Output should be subsection names where each section should serve as a coherent and themantic organization of information and corresponding citation numbers. These subsection names are preferred to be concise and precise.\n    Output follows the format below:\n    subsection 1\n    subsection 2\n    subsection 3\n\n---\n\nThe section you need to expand: ['root', 'Advancements in Technology', 'Advancements in fMRI Technology', 'Enhanced fMRI Resolution for Brain Research']\n\nThe collected information:\nQuestion: What advancements in fMRI technology do you believe are necessary to enhance the quality of neural data for training brain foundation models, and how might these advancements impact the development of more accurate and efficient models?\nQuery: recent advancements in fMRI technology 2023\n\nQuestion: What advancements in fMRI technology do you believe are necessary to enhance the quality of neural data for training brain foundation models, and how might these advancements impact the development of more accurate and efficient models?\nQuery: improving fMRI resolution for brain research\n\nNow provide the expanded subsection names (If there's no need to expand current section as itself serves good organization, then output None):",
+        "response": {
+          "id": "chatcmpl-At57aakv4aapsqpbzQNooyfCULh65",
+          "choices": [
+            {
+              "finish_reason": "stop",
+              "index": 0,
+              "logprobs": null,
+              "message": {
+                "content": "Improved Spatial Resolution  \nAdvanced Temporal Resolution  \nIntegration with AI and Machine Learning Techniques",
+                "refusal": null,
+                "role": "assistant",
+                "audio": null,
+                "function_call": null,
+                "tool_calls": null
+              }
+            }
+          ],
+          "created": 1737691090,
+          "model": "gpt-4o-2024-08-06",
+          "object": "chat.completion",
+          "service_tier": null,
+          "system_fingerprint": "fp_f3927aa00d",
+          "usage": {
+            "completion_tokens": 16,
+            "prompt_tokens": 271,
+            "total_tokens": 287,
+            "completion_tokens_details": {
+              "accepted_prediction_tokens": null,
+              "audio_tokens": null,
+              "reasoning_tokens": null,
+              "rejected_prediction_tokens": null
+            },
+            "prompt_tokens_details": {
+              "audio_tokens": null,
+              "cached_tokens": null
+            }
+          }
+        },
+        "kwargs": {
+          "stringify_request": "{\"temperature\": 1.0, \"max_tokens\": 1000, \"top_p\": 0.9, \"frequency_penalty\": 0, \"presence_penalty\": 0, \"n\": 1, \"model\": \"gpt-4o\", \"messages\": [{\"role\": \"user\", \"content\": \"Your task is to expand a section in the mind map by creating new subsections under the given section.\\n    You will be given a list of question and query that are used to collect information.\\n    Output should be subsection names where each section should serve as a coherent and themantic organization of information and corresponding citation numbers. These subsection names are preferred to be concise and precise.\\n    Output follows the format below:\\n    subsection 1\\n    subsection 2\\n    subsection 3\\n\\n---\\n\\nThe section you need to expand: ['root', 'Advancements in Technology', 'Advancements in fMRI Technology', 'Enhanced fMRI Resolution for Brain Research']\\n\\nThe collected information:\\nQuestion: What advancements in fMRI technology do you believe are necessary to enhance the quality of neural data for training brain foundation models, and how might these advancements impact the development of more accurate and efficient models?\\nQuery: recent advancements in fMRI technology 2023\\n\\nQuestion: What advancements in fMRI technology do you believe are necessary to enhance the quality of neural data for training brain foundation models, and how might these advancements impact the development of more accurate and efficient models?\\nQuery: improving fMRI resolution for brain research\\n\\nNow provide the expanded subsection names (If there's no need to expand current section as itself serves good organization, then output None):\"}]}"
+        },
+        "raw_kwargs": {}
+      },
+      {
+        "prompt": "Your job is to insert the given information to the knowledge base. The knowledge base is a tree based data structure to organize the collection information. Each knowledge node contains information derived from themantically similar question or intent.\n    You will be presented with the question and query leads to this information, and candidate choices of placement. In these choices, -> denotes parent-child relationship. Note that reasonable may not be in these choices.\n\n    If there exists reasonable choice, output \"Best placement: [choice index]\"; otherwise, output \"No reasonable choice\".\n\n---\n\nQuestion and query leads to this info:\nQuestion: What advancements in fMRI technology do you believe are necessary to enhance the quality of neural data for training brain foundation models, and how might these advancements impact the development of more accurate and efficient models?\nQuery: improving fMRI resolution for brain research\n\n\nCandidate placement:\n1: Enhanced fMRI Resolution for Brain Research -> Integration with AI and Machine Learning Techniques\n2: Enhanced fMRI Resolution for Brain Research\n3: Enhanced fMRI Resolution for Brain Research -> Improved Spatial Resolution\n4: Enhanced fMRI Resolution for Brain Research -> Advanced Temporal Resolution\n\nDecision:",
+        "response": {
+          "id": "chatcmpl-At57hdTzcNIJYnNrpBEaflQrfkeBf",
+          "choices": [
+            {
+              "finish_reason": "stop",
+              "index": 0,
+              "logprobs": null,
+              "message": {
+                "content": "Best placement: [2]",
+                "refusal": null,
+                "role": "assistant",
+                "audio": null,
+                "function_call": null,
+                "tool_calls": null
+              }
+            }
+          ],
+          "created": 1737691097,
+          "model": "gpt-4o-2024-08-06",
+          "object": "chat.completion",
+          "service_tier": null,
+          "system_fingerprint": "fp_f3927aa00d",
+          "usage": {
+            "completion_tokens": 6,
+            "prompt_tokens": 236,
+            "total_tokens": 242,
+            "completion_tokens_details": {
+              "accepted_prediction_tokens": null,
+              "audio_tokens": null,
+              "reasoning_tokens": null,
+              "rejected_prediction_tokens": null
+            },
+            "prompt_tokens_details": {
+              "audio_tokens": null,
+              "cached_tokens": null
+            }
+          }
+        },
+        "kwargs": {
+          "stringify_request": "{\"temperature\": 1.0, \"max_tokens\": 1000, \"top_p\": 0.9, \"frequency_penalty\": 0, \"presence_penalty\": 0, \"n\": 1, \"model\": \"gpt-4o\", \"messages\": [{\"role\": \"user\", \"content\": \"Your job is to insert the given information to the knowledge base. The knowledge base is a tree based data structure to organize the collection information. Each knowledge node contains information derived from themantically similar question or intent.\\n    You will be presented with the question and query leads to this information, and candidate choices of placement. In these choices, -> denotes parent-child relationship. Note that reasonable may not be in these choices.\\n\\n    If there exists reasonable choice, output \\\"Best placement: [choice index]\\\"; otherwise, output \\\"No reasonable choice\\\".\\n\\n---\\n\\nQuestion and query leads to this info:\\nQuestion: What advancements in fMRI technology do you believe are necessary to enhance the quality of neural data for training brain foundation models, and how might these advancements impact the development of more accurate and efficient models?\\nQuery: improving fMRI resolution for brain research\\n\\n\\nCandidate placement:\\n1: Enhanced fMRI Resolution for Brain Research -> Integration with AI and Machine Learning Techniques\\n2: Enhanced fMRI Resolution for Brain Research\\n3: Enhanced fMRI Resolution for Brain Research -> Improved Spatial Resolution\\n4: Enhanced fMRI Resolution for Brain Research -> Advanced Temporal Resolution\\n\\nDecision:\"}]}"
+        },
+        "raw_kwargs": {}
+      },
+      {
+        "prompt": "Your job is to insert the given information to the knowledge base. The knowledge base is a tree based data structure to organize the collection information. Each knowledge node contains information derived from themantically similar question or intent.\n    You will be presented with the question and query leads to this information, and candidate choices of placement. In these choices, -> denotes parent-child relationship. Note that reasonable may not be in these choices.\n\n    If there exists reasonable choice, output \"Best placement: [choice index]\"; otherwise, output \"No reasonable choice\".\n\n---\n\nQuestion and query leads to this info:\nQuestion: What advancements in fMRI technology do you believe are necessary to enhance the quality of neural data for training brain foundation models, and how might these advancements impact the development of more accurate and efficient models?\nQuery: recent advancements in fMRI technology 2023\n\n\nCandidate placement:\n1: Enhanced fMRI Resolution for Brain Research -> Integration with AI and Machine Learning Techniques\n2: Enhanced fMRI Resolution for Brain Research\n3: Enhanced fMRI Resolution for Brain Research -> Improved Spatial Resolution\n4: Enhanced fMRI Resolution for Brain Research -> Advanced Temporal Resolution\n\nDecision:",
+        "response": {
+          "id": "chatcmpl-At57i5OW2tDK7igK3djJC76Xpy3sg",
+          "choices": [
+            {
+              "finish_reason": "stop",
+              "index": 0,
+              "logprobs": null,
+              "message": {
+                "content": "Best placement: [1]",
+                "refusal": null,
+                "role": "assistant",
+                "audio": null,
+                "function_call": null,
+                "tool_calls": null
+              }
+            }
+          ],
+          "created": 1737691098,
+          "model": "gpt-4o-2024-08-06",
+          "object": "chat.completion",
+          "service_tier": null,
+          "system_fingerprint": "fp_f3927aa00d",
+          "usage": {
+            "completion_tokens": 6,
+            "prompt_tokens": 238,
+            "total_tokens": 244,
+            "completion_tokens_details": {
+              "accepted_prediction_tokens": null,
+              "audio_tokens": null,
+              "reasoning_tokens": null,
+              "rejected_prediction_tokens": null
+            },
+            "prompt_tokens_details": {
+              "audio_tokens": null,
+              "cached_tokens": null
+            }
+          }
+        },
+        "kwargs": {
+          "stringify_request": "{\"temperature\": 1.0, \"max_tokens\": 1000, \"top_p\": 0.9, \"frequency_penalty\": 0, \"presence_penalty\": 0, \"n\": 1, \"model\": \"gpt-4o\", \"messages\": [{\"role\": \"user\", \"content\": \"Your job is to insert the given information to the knowledge base. The knowledge base is a tree based data structure to organize the collection information. Each knowledge node contains information derived from themantically similar question or intent.\\n    You will be presented with the question and query leads to this information, and candidate choices of placement. In these choices, -> denotes parent-child relationship. Note that reasonable may not be in these choices.\\n\\n    If there exists reasonable choice, output \\\"Best placement: [choice index]\\\"; otherwise, output \\\"No reasonable choice\\\".\\n\\n---\\n\\nQuestion and query leads to this info:\\nQuestion: What advancements in fMRI technology do you believe are necessary to enhance the quality of neural data for training brain foundation models, and how might these advancements impact the development of more accurate and efficient models?\\nQuery: recent advancements in fMRI technology 2023\\n\\n\\nCandidate placement:\\n1: Enhanced fMRI Resolution for Brain Research -> Integration with AI and Machine Learning Techniques\\n2: Enhanced fMRI Resolution for Brain Research\\n3: Enhanced fMRI Resolution for Brain Research -> Improved Spatial Resolution\\n4: Enhanced fMRI Resolution for Brain Research -> Advanced Temporal Resolution\\n\\nDecision:\"}]}"
+        },
+        "raw_kwargs": {}
+      },
+      {
+        "prompt": "Write a Wikipedia section based on the collected information. You will be given the topic, the section you are writing and relevant information.\n    Each information will be provided with the raw content along with question and query lead to that information.\n    Here is the format of your writing:\n    Use [1], [2], ..., [n] in line (for example, \"The capital of the United States is Washington, D.C.[1][3].\"). You DO NOT need to include a References or Sources section to list the sources at the end.\n\n---\n\nFollow the following format.\n\nThe collected information:\n${info}\n\nThe topic of the page: ${topic}\n\nThe section you need to write: ${section}\n\nWrite the section with proper inline citations (Start your writing. Don't include the page title, section name, or try to write other sections. Do not start the section with topic name.):\n${output}\n\n---\n\nThe collected information:\n[39]: The analysis of fMRI data continues to be a subject of intense research at this time, and is one about which numerous books have been written, to which the reader is referred for further information (e.g. Sarty56). fMRI can be compared to other imaging methods used to obtained functional assessment of brain metabolism in terms of spatial and temporal resolution and availability. (Question: What advancements in fMRI technology do you believe are necessary to enhance the quality of neural data for training brain foundation models, and how might these advancements impact the development of more accurate and efficient models?. Query: improving fMRI resolution for brain research)\n[40]: The study was used to highlight the need for more careful statistical analyses in fMRI research, given the large number of voxels in a typical fMRI scan and the multiple comparisons problem. Before the controversies were publicized in 2010, between 25 and 40% of studies on fMRI being published were not using the corrected comparisons. But by 2012, that number had dropped to 10%. Dr. Sally Satel, writing in Time, cautioned that while brain scans have scientific value, individual brain areas often serve multiple purposes and \"reverse inferences\" as commonly used in press reports carry a significant chance of drawing invalid conclusions. (Question: What advancements in fMRI technology do you believe are necessary to enhance the quality of neural data for training brain foundation models, and how might these advancements impact the development of more accurate and efficient models?. Query: improving fMRI resolution for brain research)\n[41]: As with all scientific techniques, fMRI has limitations that researchers must be aware of as they interpret results. Although some argue that attempts to localize psychological function via functional neuroimaging are misguided (Miller, 2010), a more widely accepted caveat about fMRI is that correlations of brain activity patterns with behavior does not prove causality (Cacioppo et al., 2003; Beck, 2010). (Question: What advancements in fMRI technology do you believe are necessary to enhance the quality of neural data for training brain foundation models, and how might these advancements impact the development of more accurate and efficient models?. Query: improving fMRI resolution for brain research)\n[42]: The analysis of brain function in resting-state network (RSN) models, ascertained through the functional connectivity pattern of resting-state functional magnetic resonance imaging (rs-fMRI), is sufficiently powerful for studying large-scale functional integration of the brain. However, in RSN-based research, the network architecture has been regarded as the same through different frequency bands. (Question: What advancements in fMRI technology do you believe are necessary to enhance the quality of neural data for training brain foundation models, and how might these advancements impact the development of more accurate and efficient models?. Query: improving fMRI resolution for brain research)\n[43]: Scientific Data - Individual Brain Charting, a high-resolution fMRI dataset for cognitive mapping (Question: What advancements in fMRI technology do you believe are necessary to enhance the quality of neural data for training brain foundation models, and how might these advancements impact the development of more accurate and efficient models?. Query: improving fMRI resolution for brain research)\n[44]: “This is a good wakeup call, and it’s a marker of Ahmad’s integrity that he’s taking this on,” said Poldrack, who was not involved in the meta-analysis but said he has had suspicions about fMRI reliability for a few years now. Connectivity mapping – seeing how areas of the brain are connected to address a task more than just what areas are active – is going to be the way forward, Poldrack predicted. Hariri agreed that identifying patterns of activity throughout the brain rather than in one or two areas may improve reliability. In the meantime, the sociology behind a dramatic debunking of a scientific tool is going to be interesting to watch, Hariri and Poldrack both said. (Question: What advancements in fMRI technology do you believe are necessary to enhance the quality of neural data for training brain foundation models, and how might these advancements impact the development of more accurate and efficient models?. Query: improving fMRI resolution for brain research)\n[45]: Functional magnetic resonance imaging (fMRI) is a technique for measuring and mapping brain activity that is noninvasive and safe. It is being used in many studies to better understand how the healthy brain works, and in a growing number of studies it is being applied to understand how that normal function is disrupted in disease. Courtesy of Dr. Richard Buxton, UC San Diego · MRI has become a standard tool for Radiology because it provides high resolution images with good contrast between different tissues. (Question: What advancements in fMRI technology do you believe are necessary to enhance the quality of neural data for training brain foundation models, and how might these advancements impact the development of more accurate and efficient models?. Query: improving fMRI resolution for brain research)\n[46]: fMRI, ERP and other \"windows into the brain\" - quantitative approaches to cognitive neuroscience and real-time measures are rapidly advancing our understanding of the brain (Question: What advancements in fMRI technology do you believe are necessary to enhance the quality of neural data for training brain foundation models, and how might these advancements impact the development of more accurate and efficient models?. Query: improving fMRI resolution for brain research)\n[47]: These techniques have also been integrated into groundbreaking new neurofeedback technologies, specifically decoded neurofeedback (DecNef) and functional-connectivity-based neurofeedback (FCNef). By modulating neural activity and behavior, DecNef and FCNef have substantially advanced both basic and clinical research. Keywords: fMRI neurofeedback, implicit neurofeedback, external reward, multivariate analysis, decoded neurofeedback (DecNef), functional-connectivity-based neurofeedback (FCNef) (Question: What advancements in fMRI technology do you believe are necessary to enhance the quality of neural data for training brain foundation models, and how might these advancements impact the development of more accurate and efficient models?. Query: recent advancements in fMRI technology 2023)\n[48]: Large-scale neural mass simulations revealed best task-modulated functional connectivity methods for different fMRI designs and fundamental limitations for detecting rapid modulations of neural synchronisation based on slow haemodynamic fluctuations. (Question: What advancements in fMRI technology do you believe are necessary to enhance the quality of neural data for training brain foundation models, and how might these advancements impact the development of more accurate and efficient models?. Query: recent advancements in fMRI technology 2023)\n\nThe topic of the page: fmri brain foundation model\n\nThe section you need to write: Enhanced fMRI Resolution for Brain Research\n\nWrite the section with proper inline citations (Start your writing. Don't include the page title, section name, or try to write other sections. Do not start the section with topic name.):",
+        "response": {
+          "id": "chatcmpl-At5CjK04IMAGYdRvAabwzGMVLdjiP",
+          "choices": [
+            {
+              "finish_reason": "stop",
+              "index": 0,
+              "logprobs": null,
+              "message": {
+                "content": "Recent advancements in fMRI technology have focused on enhancing spatial and temporal resolution to improve the quality of neural data used for brain research and the training of brain foundation models. The analysis of fMRI data remains a dynamic field, with ongoing efforts to improve imaging methods and achieve higher resolution in both spatial and temporal domains, essential for accurate functional assessments of brain metabolism[39]. Despite being a powerful tool for noninvasively measuring and mapping brain activity, fMRI is challenged by issues such as the multiple comparisons problem and the need for rigorous statistical analyses[40]. This is crucial given that incorrect statistical handling in fMRI studies can lead to significant inaccuracies, as was highlighted by a reduction in studies with uncorrected comparisons from up to 40% before 2010 to 10% by 2012[40].\n\nAdvancements in connectivity mapping are proving essential as they allow researchers to explore patterns of activity throughout the brain rather than focusing on isolated areas, which enhances reliability and provides a more comprehensive understanding of brain function[44]. This approach, along with the development of high-resolution datasets such as the Individual Brain Charting initiative, facilitates detailed cognitive mapping and contributes to the broader understanding of both healthy and disrupted brain function[43][45]. Moreover, the integration of quantitative approaches and real-time measures like event-related potentials (ERP) with fMRI, along with emerging neurofeedback technologies such as decoded neurofeedback (DecNef) and functional-connectivity-based neurofeedback (FCNef), has significantly advanced both basic and clinical research[46][47].\n\nThese improvements in fMRI technology are crucial for the development of accurate and efficient brain foundation models, as they provide more reliable data on brain function and connectivity. Large-scale neural mass simulations have further underscored the importance of task-modulated functional connectivity methods and highlighted the fundamental limitations of detecting rapid neural synchronisation modulations, given the slow nature of haemodynamic fluctuations in fMRI data[48]. Overall, these advancements signal a promising future for fMRI research, enhancing our understanding of complex brain functions and disorders.",
+                "refusal": null,
+                "role": "assistant",
+                "audio": null,
+                "function_call": null,
+                "tool_calls": null
+              }
+            }
+          ],
+          "created": 1737691409,
+          "model": "gpt-4o-2024-08-06",
+          "object": "chat.completion",
+          "service_tier": null,
+          "system_fingerprint": "fp_f3927aa00d",
+          "usage": {
+            "completion_tokens": 412,
+            "prompt_tokens": 1596,
+            "total_tokens": 2008,
+            "completion_tokens_details": {
+              "accepted_prediction_tokens": null,
+              "audio_tokens": null,
+              "reasoning_tokens": null,
+              "rejected_prediction_tokens": null
+            },
+            "prompt_tokens_details": {
+              "audio_tokens": null,
+              "cached_tokens": null
+            }
+          }
+        },
+        "kwargs": {
+          "stringify_request": "{\"temperature\": 1.0, \"max_tokens\": 1000, \"top_p\": 0.9, \"frequency_penalty\": 0, \"presence_penalty\": 0, \"n\": 1, \"model\": \"gpt-4o\", \"messages\": [{\"role\": \"user\", \"content\": \"Write a Wikipedia section based on the collected information. You will be given the topic, the section you are writing and relevant information.\\n    Each information will be provided with the raw content along with question and query lead to that information.\\n    Here is the format of your writing:\\n    Use [1], [2], ..., [n] in line (for example, \\\"The capital of the United States is Washington, D.C.[1][3].\\\"). You DO NOT need to include a References or Sources section to list the sources at the end.\\n\\n---\\n\\nFollow the following format.\\n\\nThe collected information:\\n${info}\\n\\nThe topic of the page: ${topic}\\n\\nThe section you need to write: ${section}\\n\\nWrite the section with proper inline citations (Start your writing. Don't include the page title, section name, or try to write other sections. Do not start the section with topic name.):\\n${output}\\n\\n---\\n\\nThe collected information:\\n[39]: The analysis of fMRI data continues to be a subject of intense research at this time, and is one about which numerous books have been written, to which the reader is referred for further information (e.g. Sarty56). fMRI can be compared to other imaging methods used to obtained functional assessment of brain metabolism in terms of spatial and temporal resolution and availability. (Question: What advancements in fMRI technology do you believe are necessary to enhance the quality of neural data for training brain foundation models, and how might these advancements impact the development of more accurate and efficient models?. Query: improving fMRI resolution for brain research)\\n[40]: The study was used to highlight the need for more careful statistical analyses in fMRI research, given the large number of voxels in a typical fMRI scan and the multiple comparisons problem. Before the controversies were publicized in 2010, between 25 and 40% of studies on fMRI being published were not using the corrected comparisons. But by 2012, that number had dropped to 10%. Dr. Sally Satel, writing in Time, cautioned that while brain scans have scientific value, individual brain areas often serve multiple purposes and \\\"reverse inferences\\\" as commonly used in press reports carry a significant chance of drawing invalid conclusions. (Question: What advancements in fMRI technology do you believe are necessary to enhance the quality of neural data for training brain foundation models, and how might these advancements impact the development of more accurate and efficient models?. Query: improving fMRI resolution for brain research)\\n[41]: As with all scientific techniques, fMRI has limitations that researchers must be aware of as they interpret results. Although some argue that attempts to localize psychological function via functional neuroimaging are misguided (Miller, 2010), a more widely accepted caveat about fMRI is that correlations of brain activity patterns with behavior does not prove causality (Cacioppo et al., 2003; Beck, 2010). (Question: What advancements in fMRI technology do you believe are necessary to enhance the quality of neural data for training brain foundation models, and how might these advancements impact the development of more accurate and efficient models?. Query: improving fMRI resolution for brain research)\\n[42]: The analysis of brain function in resting-state network (RSN) models, ascertained through the functional connectivity pattern of resting-state functional magnetic resonance imaging (rs-fMRI), is sufficiently powerful for studying large-scale functional integration of the brain. However, in RSN-based research, the network architecture has been regarded as the same through different frequency bands. (Question: What advancements in fMRI technology do you believe are necessary to enhance the quality of neural data for training brain foundation models, and how might these advancements impact the development of more accurate and efficient models?. Query: improving fMRI resolution for brain research)\\n[43]: Scientific Data - Individual Brain Charting, a high-resolution fMRI dataset for cognitive mapping (Question: What advancements in fMRI technology do you believe are necessary to enhance the quality of neural data for training brain foundation models, and how might these advancements impact the development of more accurate and efficient models?. Query: improving fMRI resolution for brain research)\\n[44]: \\u201cThis is a good wakeup call, and it\\u2019s a marker of Ahmad\\u2019s integrity that he\\u2019s taking this on,\\u201d said Poldrack, who was not involved in the meta-analysis but said he has had suspicions about fMRI reliability for a few years now. Connectivity mapping \\u2013 seeing how areas of the brain are connected to address a task more than just what areas are active \\u2013 is going to be the way forward, Poldrack predicted. Hariri agreed that identifying patterns of activity throughout the brain rather than in one or two areas may improve reliability. In the meantime, the sociology behind a dramatic debunking of a scientific tool is going to be interesting to watch, Hariri and Poldrack both said. (Question: What advancements in fMRI technology do you believe are necessary to enhance the quality of neural data for training brain foundation models, and how might these advancements impact the development of more accurate and efficient models?. Query: improving fMRI resolution for brain research)\\n[45]: Functional magnetic resonance imaging (fMRI) is a technique for measuring and mapping brain activity that is noninvasive and safe. It is being used in many studies to better understand how the healthy brain works, and in a growing number of studies it is being applied to understand how that normal function is disrupted in disease. Courtesy of Dr. Richard Buxton, UC San Diego \\u00b7 MRI has become a standard tool for Radiology because it provides high resolution images with good contrast between different tissues. (Question: What advancements in fMRI technology do you believe are necessary to enhance the quality of neural data for training brain foundation models, and how might these advancements impact the development of more accurate and efficient models?. Query: improving fMRI resolution for brain research)\\n[46]: fMRI, ERP and other \\\"windows into the brain\\\" - quantitative approaches to cognitive neuroscience and real-time measures are rapidly advancing our understanding of the brain (Question: What advancements in fMRI technology do you believe are necessary to enhance the quality of neural data for training brain foundation models, and how might these advancements impact the development of more accurate and efficient models?. Query: improving fMRI resolution for brain research)\\n[47]: These techniques have also been integrated into groundbreaking new neurofeedback technologies, specifically decoded neurofeedback (DecNef) and functional-connectivity-based neurofeedback (FCNef). By modulating neural activity and behavior, DecNef and FCNef have substantially advanced both basic and clinical research. Keywords: fMRI neurofeedback, implicit neurofeedback, external reward, multivariate analysis, decoded neurofeedback (DecNef), functional-connectivity-based neurofeedback (FCNef) (Question: What advancements in fMRI technology do you believe are necessary to enhance the quality of neural data for training brain foundation models, and how might these advancements impact the development of more accurate and efficient models?. Query: recent advancements in fMRI technology 2023)\\n[48]: Large-scale neural mass simulations revealed best task-modulated functional connectivity methods for different fMRI designs and fundamental limitations for detecting rapid modulations of neural synchronisation based on slow haemodynamic fluctuations. (Question: What advancements in fMRI technology do you believe are necessary to enhance the quality of neural data for training brain foundation models, and how might these advancements impact the development of more accurate and efficient models?. Query: recent advancements in fMRI technology 2023)\\n\\nThe topic of the page: fmri brain foundation model\\n\\nThe section you need to write: Enhanced fMRI Resolution for Brain Research\\n\\nWrite the section with proper inline citations (Start your writing. Don't include the page title, section name, or try to write other sections. Do not start the section with topic name.):\"}]}"
+        },
+        "raw_kwargs": {}
+      }
+    ],
+    "query_count": 0,
+    "total_wall_time": 0.003131866455078125
+  }
+}
