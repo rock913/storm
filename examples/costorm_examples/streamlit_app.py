@@ -227,15 +227,15 @@ def render_chat_interface(topic_id):
     selected_session = sessions[0]
     
     # 会话操作区
-    with st.container():
-        col1, col2 = st.columns([1, 3])
-        with col1:
-            if st.button("🔄 刷新会话", key="refresh_session"):
-                st.rerun()
-        with col2:
-            if st.button("⚡ 自动推进对话", key="auto_progress"):
-                auto_step(selected_session['session_id'])
-                st.rerun()
+    # with st.container():
+    #     col1, col2 = st.columns([1, 3])
+    #     with col1:
+    #         if st.button("🔄 刷新会话", key="refresh_session"):
+    #             st.rerun()
+    #     with col2:
+    #         if st.button("⚡ 自动推进对话", key="auto_progress"):
+    #             auto_step(selected_session['session_id'])
+    #             st.rerun()
     
     # 显示会话消息
     show_session_messages(selected_session)
@@ -270,66 +270,34 @@ def render_article_interface(topic_id):
         
         # 显示最新报告内容
         if latest_report:
-            st.markdown("### 最新研究报告")
+            # 分割正文和参考文献
+            content_part, refs_part = split_content_and_references(latest_report['content'])
             
-            # 注入交互式组件
-            components.html(f"""
-            <style>
-                .ref-card {{
-                    position: fixed;
-                    bottom: 20px;
-                    right: 20px;
-                    background: white;
-                    padding: 1rem;
-                    border-radius: 8px;
-                    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-                    max-width: 400px;
-                    z-index: 1000;
-                    display: none;
-                }}
-                .ref-link {{
-                    cursor: pointer;
-                    color: #1E88E5;
-                    text-decoration: underline;
-                }}
-            </style>
+            # 解析引用
+            citations = parse_citations(refs_part)
             
-            <div id="article-content">{latest_report['content']}</div>
-            <div id="ref-card" class="ref-card"></div>
+            # 显示带链接的正文
+            linked_content = link_citations(content_part, citations)
+            st.markdown(linked_content, unsafe_allow_html=True)
+            # print('content_part:',content_part[:1500])
+            # print('refs_part:',refs_part[:1500])
+            # print('citations:',citations)
+            # print('linked_content:',linked_content[:1500])
             
-            <script>
-                // 自动解析参考文献
-                const refs = Array.from(document.querySelectorAll('#article-content a'))
-                    .filter(a => a.href.startsWith('http'))
-                    .map(a => {{
-                        const id = a.textContent.match(/\[(\d+)\]/)?.[1];
-                        return id ? {{ 
-                            id: id,
-                            title: a.innerText.replace(/\[\d+\]/, '').trim(),
-                            url: a.href,
-                            content: a.closest('li')?.innerText || ''
-                        }} : null;
-                    }}).filter(Boolean);
-                
-                // 点击事件处理
-                document.getElementById('article-content').addEventListener('click', (e) => {{
-                    if(e.target.tagName === 'A' && e.target.textContent.match(/\[\d+\]/)) {{
-                        const refId = e.target.textContent.match(/\[(\d+)\]/)[1];
-                        const ref = refs.find(r => r.id === refId);
-                        if(ref) {{
-                            const card = document.getElementById('ref-card');
-                            card.innerHTML = `
-                                <h4>${{ref.title}}</h4>
-                                <p>${{ref.content}}</p>
-                                <a href="${{ref.url}}" target="_blank">查看原文</a>
-                            `;
-                            card.style.display = 'block';
-                            setTimeout(() => card.style.display = 'none', 5000);
-                        }}
-                    }}
-                }});
-            </script>
-            """, height=600)
+            # 显示格式化参考文献
+            if citations:
+                st.markdown("---\n**参考文献**")
+                for idx, ref in citations.items():
+                    st.markdown(f"""
+                    <div style="margin: 8px 0; line-height: 1.5">
+                        <sup>[{idx}]</sup> 
+                        <a href="{ref['url']}" target="_blank" style="text-decoration: none; color: #2c3e50;">
+                            {ref['title']}
+                        </a>
+                        <br>
+                        <span style="color: #666; font-size: 0.9em">{ref['snippet']}</span>
+                    </div>
+                    """, unsafe_allow_html=True)
         elif 'current_article' in st.session_state:
             st.markdown(st.session_state.current_article['content'])
 
@@ -651,16 +619,14 @@ def auto_step(session_id):
     return response.json() if response.ok else None
 
 def show_session_messages(session):
-    """显示会话消息历史"""
+    """优化后的对话界面布局"""
     if not session:
         return
     
     try:
-        # 获取消息历史
-        messages = get_messages(session['session_id'])
-        
-        # 创建消息容器
-        with st.container():
+        # 消息显示区域（增加底部间距）
+        with st.container(height=520, border=False):
+            messages = get_messages(session['session_id'])
             for msg in messages:
                 # 根据消息角色设置不同的样式
                 if msg['role'] == 'user':
@@ -681,39 +647,55 @@ def show_session_messages(session):
                 
                 # 显示时间戳
                 st.caption(f"发送时间: {msg['timestamp'][:19]}")
-        
-        # 添加消息输入框
+
+        # 操作按钮与输入区域融合
         with st.container():
-            # 使用列布局优化输入区域
-            col1, col2 = st.columns([4, 1])
-            with col1:
+            # 第一行：紧凑型自动推进按钮
+            auto_col, _ = st.columns([0.3, 0.7])
+            with auto_col:
+                if st.button("⏩ 自动推进", 
+                            key=f"auto_step_{session['session_id']}",
+                            use_container_width=True,
+                            help="自动执行下一步对话流程"):
+                    auto_step(session['session_id'])
+                    st.rerun()
+
+            # 第二行：融合式输入区域
+            input_col, btn_col = st.columns([0.85, 0.15])
+            with input_col:
                 user_input = st.text_input(
                     "输入消息",
                     key=f"msg_input_{session['session_id']}",
-                    placeholder="输入您的问题或观点..."
+                    placeholder="输入消息内容...",
+                    label_visibility="collapsed",
                 )
-            with col2:
-                # 发送按钮
-                if st.button("发送", key=f"send_btn_{session['session_id']}", use_container_width=True):
-                    if user_input:
-                        if send_message(session['session_id'], user_input):
-                            st.rerun()
-                    else:
-                        st.warning("请输入消息内容")
-        
-        # 添加功能按钮
-        col1, col2 = st.columns(2)
-        with col1:
-            if st.button("📝 生成报告", key=f"report_btn_{session['session_id']}", use_container_width=True):
-                report_data = generate_report(session['session_id'])
-                if report_data:
-                    st.markdown("### 研究报告")
-                    st.markdown(report_data['content'])
-        
-        with col2:
-            if st.button("🔄 刷新消息", key=f"refresh_btn_{session['session_id']}", use_container_width=True):
-                st.rerun()
-                
+            with btn_col:
+                send_btn = st.button(
+                    "🚀",  # 使用图标代替文字
+                    key=f"send_btn_{session['session_id']}", 
+                    use_container_width=True,
+                    help="发送消息",
+                    type="primary"
+                )
+                if send_btn and user_input:
+                    if send_message(session['session_id'], user_input):
+                        st.rerun()
+
+        # 添加自定义样式
+        st.markdown("""
+        <style>
+            /* 输入框圆角效果 */
+            div[data-testid="stTextInput"] input {
+                border-radius: 20px !important;
+                padding-right: 20px !important;
+            }
+            /* 按钮对齐优化 */
+            div[data-testid="column"]:has(> div[data-testid="stVerticalBlock"] > button) {
+                align-items: end;
+            }
+        </style>
+        """, unsafe_allow_html=True)
+
     except Exception as e:
         st.error(f"加载消息失败: {str(e)}")
 
@@ -795,6 +777,51 @@ def get_session_reports(session_id):
     except Exception as e:
         st.error(f"获取报告失败: {str(e)}")
         return []
+
+# 新增引用解析函数
+def split_content_and_references(content):
+    """分割正文和参考文献部分"""
+    ref_start = content.find("参考文献")
+    if ref_start == -1:
+        return content, ""
+    return content[:ref_start], content[ref_start:]
+
+def parse_citations(refs_part):
+    """解析新版参考文献条目"""
+    import re
+    citations = {}
+    # 更新正则表达式匹配新格式
+    pattern = r'\[(\d+)\] \[(.*?)\]\((https?://\S+)\)\s*\n\*(.*?)\*'
+    
+    matches = re.finditer(pattern, refs_part, re.DOTALL)
+    for match in matches:
+        idx = match.group(1)
+        title = match.group(2).strip()
+        url = match.group(3).strip()
+        snippet = match.group(4).replace('\n', ' ').strip()
+        
+        # 处理多行标题的情况
+        clean_title = re.sub(r'\s+', ' ', title).replace('[PDF] ', '')
+        
+        citations[idx] = {
+            "title": clean_title,
+            "url": url,
+            "snippet": snippet
+        }
+    return citations
+
+def link_citations(content, citations):
+    """将正文中的[数字]转为可点击的弹出式引用"""
+    import re
+    pattern = r'\[(\d+)\]'
+    
+    def replace_match(match):
+        idx = match.group(1)
+        if idx in citations:
+            return f'<sup><a href="{citations[idx]["url"]}" target="_blank" style="text-decoration: none; color: #2c3e50;">[{idx}]</a></sup>'
+        return match.group(0)
+    
+    return re.sub(pattern, replace_match, content)
 
 if __name__ == "__main__":
     main()

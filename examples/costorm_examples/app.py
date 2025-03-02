@@ -19,7 +19,7 @@ from knowledge_storm.collaborative_storm.modules.callback import LocalConsolePri
 from knowledge_storm.utils import load_api_key
 import types
 import os
-from knowledge_storm.lm import OpenAIModel, AzureOpenAIModel
+from knowledge_storm.lm import OpenAIModel, AzureOpenAIModel, LitellmModel
 from knowledge_storm.rm import (
     YouRM, BingSearch, BraveRM, SerperRM,
     DuckDuckGoSearchRM, TavilySearchRM, SearXNG, SemanticScholarRM
@@ -144,30 +144,39 @@ def add_security_headers(response):
 
 def configure_lm_models():
     """配置所有语言模型"""
-    # 根据环境变量选择模型类型
-    ModelClass = OpenAIModel if os.getenv('OPENAI_API_TYPE') == 'openai' else AzureOpenAIModel
+    # 导入LitellmModel
+    from knowledge_storm.lm import LitellmModel
+    
+    # 设置模型名称
+    gpt_4o_model_name = 'gpt-4o-mini'
     
     # 配置模型参数
-    model_params = {
+    openai_kwargs = {
+        "api_key": os.getenv("OPENAI_API_KEY"),
+        "api_provider": "openai",
         "temperature": 1.0,
         "top_p": 0.9,
-        "api_key": os.getenv("OPENAI_API_KEY") or os.getenv("AZURE_API_KEY"),
-        "api_base": os.getenv("OPENAI_API_BASE") or os.getenv("AZURE_API_BASE"),
+        "api_base": os.getenv("OPENAI_API_BASE"),
     }
-    if os.getenv('OPENAI_API_TYPE') == 'azure':
-        model_params.update({
-            "api_version": os.getenv("AZURE_API_VERSION")
-        })
     
     # 初始化各模块语言模型
-    model_name = 'gpt-4o'  # 根据实际需求调整模型名称
     lm_config = CollaborativeStormLMConfigs()
-    lm_config.set_question_answering_lm(ModelClass(model=model_name, max_tokens=1000, **model_params))
-    lm_config.set_discourse_manage_lm(ModelClass(model=model_name, max_tokens=500, **model_params))
-    lm_config.set_utterance_polishing_lm(ModelClass(model=model_name, max_tokens=2000, **model_params))
-    lm_config.set_warmstart_outline_gen_lm(ModelClass(model=model_name, max_tokens=500, **model_params))
-    lm_config.set_question_asking_lm(ModelClass(model=model_name, max_tokens=300, **model_params))
-    lm_config.set_knowledge_base_lm(ModelClass(model=model_name, max_tokens=1000, **model_params))
+    
+    # 创建各个模型实例
+    question_answering_lm = LitellmModel(model=gpt_4o_model_name, max_tokens=1000, **openai_kwargs)
+    discourse_manage_lm = LitellmModel(model=gpt_4o_model_name, max_tokens=500, **openai_kwargs)
+    utterance_polishing_lm = LitellmModel(model=gpt_4o_model_name, max_tokens=2000, **openai_kwargs)
+    warmstart_outline_gen_lm = LitellmModel(model=gpt_4o_model_name, max_tokens=500, **openai_kwargs)
+    question_asking_lm = LitellmModel(model=gpt_4o_model_name, max_tokens=300, **openai_kwargs)
+    knowledge_base_lm = LitellmModel(model=gpt_4o_model_name, max_tokens=1000, **openai_kwargs)
+    
+    # 设置各个模型到配置中
+    lm_config.set_question_answering_lm(question_answering_lm)
+    lm_config.set_discourse_manage_lm(discourse_manage_lm)
+    lm_config.set_utterance_polishing_lm(utterance_polishing_lm)
+    lm_config.set_warmstart_outline_gen_lm(warmstart_outline_gen_lm)
+    lm_config.set_question_asking_lm(question_asking_lm)
+    lm_config.set_knowledge_base_lm(knowledge_base_lm)
     
     return lm_config
 
@@ -401,6 +410,7 @@ def generate_report(current_user, session_id):
     runner = restore_runner_state(session.runner_state)
     
     # 生成报告
+    # print('Line 165:',runner.knowledge_base)
     runner.knowledge_base.reorganize()
     report_content = runner.generate_report()
     
@@ -532,4 +542,4 @@ def get_session_reports(current_user, session_id):
     } for report in reports]), 200
 
 if __name__ == '__main__':
-    app.run(port=5000,debug=True)
+    app.run(port=5000)#,debug=True)
