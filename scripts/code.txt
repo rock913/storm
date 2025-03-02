@@ -1,0 +1,534 @@
+#streamlit_app.py
+import streamlit as st
+import requests
+import json
+from datetime import datetime
+import streamlit.components.v1 as components
+
+BASE_API = "http://127.0.0.1:5000/api"
+
+def main():
+    st.set_page_config(
+        page_title="知识风暴",
+        layout="wide",
+        initial_sidebar_state="expanded"
+    )
+    
+    # 初始化session状态
+    if 'token' not in st.session_state:
+        st.session_state.token = None
+    if 'active_tab' not in st.session_state:
+        st.session_state.active_tab = "login"
+    if 'login_error' not in st.session_state:
+        st.session_state.login_error = None
+    if 'register_error' not in st.session_state:
+        st.session_state.register_error = None
+
+    # 侧边栏
+    with st.sidebar:
+        st.header("用户系统")
+        if st.session_state.token:
+            show_user_info()
+            show_topic_manager()
+        else:
+            show_auth_forms()
+
+    # 主内容区
+    if st.session_state.token:
+        show_main_content()
+    else:
+        st.warning("请先登录或注册")
+
+def show_auth_forms():
+    """显示认证表单"""
+    tab1, tab2 = st.tabs(["登录", "注册"])
+    
+    # 根据active_tab设置默认激活的标签
+    active_idx = 0 if st.session_state.active_tab == "login" else 1
+    
+    with tab1:
+        with st.form("登录表单"):
+            username = st.text_input("用户名")
+            password = st.text_input("密码", type="password")
+            if st.form_submit_button("登录", on_click=lambda: setattr(st.session_state, 'active_tab', 'login')):
+                handle_login(username, password)
+    
+    with tab2:
+        with st.form("注册表单"):
+            new_user = st.text_input("新用户名")
+            new_pass = st.text_input("新密码", type="password")
+            if st.form_submit_button("注册", on_click=lambda: setattr(st.session_state, 'active_tab', 'register')):
+                handle_register(new_user, new_pass)
+    
+    # 使用JavaScript保持标签状态
+    components.html(f"""
+    <script>
+        document.querySelectorAll('button[kind="header"]')[{active_idx}].click()
+    </script>
+    """, height=0)
+
+@st.cache_data(ttl=60)  # 缓存1分钟
+def get_current_user():
+    """获取当前登录用户信息"""
+    if not st.session_state.token:
+        return None
+    
+    try:
+        # 发起带认证的API请求
+        headers = {"x-access-token": st.session_state.token}
+        response = requests.get(
+            f"{BASE_API}/me",
+            headers=headers
+        )
+        
+        if response.status_code == 200:
+            return response.json()
+            
+        # 处理过期token情况
+        if response.status_code == 401:
+            st.error("登录已过期，请重新登录")
+            st.session_state.token = None
+            st.experimental_rerun()
+            
+        return None
+        
+    except requests.exceptions.ConnectionError:
+        st.error("无法连接到服务器")
+        return None
+    except Exception as e:
+        st.error(f"获取用户信息失败: {str(e)}")
+        return None
+
+def show_user_info():
+    """显示用户信息"""
+    try:
+        user_info = get_current_user()
+        st.success(f"欢迎，{user_info['username']}")
+        if st.button("退出登录"):
+            st.session_state.token = None
+            st.rerun()
+    except:
+        st.error("登录状态异常")
+
+def show_topic_manager():
+    """主题管理侧边栏"""
+    st.header("主题管理")
+    
+    # 新建主题
+    with st.expander("新建研究主题", expanded=False):
+        with st.form("new_topic_form"):
+            name = st.text_input("主题名称")
+            model = st.selectbox("模型选择", ["gpt-4", "gpt-3.5"])
+            max_steps = st.number_input("最大步数", value=10)
+            
+            if st.form_submit_button("创建主题"):
+                args = {
+                    "lm_configs": {"main_model": model},
+                    "max_steps": max_steps
+                }
+                create_topic(name, args)
+    
+    # 显示已有主题
+    st.subheader("现有主题")
+    topics = get_topics()
+    for topic in topics:
+        col1, col2 = st.columns([4,1])
+        with col1:
+            st.markdown(f"**{topic['name']}**")
+            st.caption(f"模型: {topic['args']['lm_configs']['main_model']}")
+        with col2:
+            if st.button("🗑️", key=f"del_{topic['id']}"):
+                delete_topic(topic['id'])
+
+def show_main_content():
+    """主内容区"""
+    st.header("协作研究会话")
+    
+    # 会话选择
+    selected_topic = st.selectbox(
+        "选择研究主题",
+        get_topics(),
+        format_func=lambda x: x['name']
+    )
+    
+    if selected_topic:
+        sessions = get_sessions(selected_topic['id'])
+        if sessions:
+            selected_session = st.selectbox(
+                "选择会话",
+                sessions,
+                format_func=lambda x: f"会话 {x['id']} - {x['created']}"
+            )
+            show_session_interface(selected_session)
+        else:
+            if st.button("新建会话"):
+                create_session(selected_topic['id'])
+                st.rerun()
+
+def show_session_interface(session):
+    """显示会话界面"""
+    col1, col2 = st.columns([2, 1])
+    
+    with col1:
+        st.subheader("研究对话")
+        show_chat_history(session['id'])
+        
+        user_input = st.text_input("输入你的想法或问题...")
+        col1_1, col1_2 = st.columns([3, 1])
+        with col1_1:
+            if st.button("发送消息"):
+                send_message(session['id'], user_input)
+                st.rerun()
+        with col1_2:
+            if st.button("自动推进"):
+                auto_step(session['id'])
+                st.rerun()
+    
+    with col2:
+        st.subheader("研究报告")
+        if st.button("生成最终报告"):
+            report = generate_report(session['id'])
+            st.markdown(report['content'])
+        
+        st.subheader("知识图谱")
+        # 这里可以添加知识图谱可视化代码
+
+def show_chat_history(session_id):
+    """显示对话历史"""
+    messages = get_messages(session_id)
+    for msg in messages:
+        with st.chat_message("user" if msg['role'] == 'user' else "assistant"):
+            st.markdown(f"**{msg['role'].capitalize()}**: {msg['content']}")
+            st.caption(msg['time'])
+
+def handle_login(username, password):
+    try:
+        print("Sending login request...")
+        response = requests.post(
+            f"{BASE_API}/login",
+            json={"username": username, "password": password}
+        )
+        if response.status_code == 200:
+            st.session_state.token = response.json()['token']
+            st.session_state.login_error = None
+            st.rerun()
+        else:
+            st.session_state.login_error = response.json().get('message', '未知错误')
+            st.error(f"登录失败: {st.session_state.login_error}")
+    except Exception as e:
+        st.session_state.login_error = f"连接服务器失败: {str(e)}"
+        st.error(f"登录失败: {st.session_state.login_error}")
+
+def handle_register(username, password):
+    try:
+        response = requests.post(
+            f"{BASE_API}/register",
+            json={"username": username, "password": password}
+        )
+        print("Line 188 response.status_code:",response.status_code)
+        if response.status_code == 201:
+            st.session_state.register_success = True
+            st.session_state.active_tab = "login"
+            st.rerun()
+        else:
+            st.session_state.register_error = response.json().get('message', '未知错误')
+            st.error(f"注册失败: {st.session_state.register_error}")
+            # st.rerun()
+    except Exception as e:
+        st.session_state.register_error = f"连接服务器失败: {str(e)}"
+        st.error(f"注册失败: {st.session_state.register_error}")
+
+def get_topics():
+    headers = {"x-access-token": st.session_state.token}
+    response = requests.get(f"{BASE_API}/topics", headers=headers)
+    return response.json() if response.ok else []
+
+def create_session(topic_id):
+    headers = {"x-access-token": st.session_state.token}
+    response = requests.post(
+        f"{BASE_API}/sessions",
+        json={"topic_id": topic_id},
+        headers=headers
+    )
+    if response.status_code != 201:
+        st.error("创建会话失败")
+
+def auto_step(session_id):
+    headers = {"x-access-token": st.session_state.token}
+    response = requests.post(
+        f"{BASE_API}/sessions/{session_id}/step",
+        json={"observation": True},
+        headers=headers
+    )
+    return response.json() if response.ok else None
+
+if __name__ == "__main__":
+    main()
+
+# app.py
+from flask import Flask, jsonify, request, make_response
+from flask_sqlalchemy import SQLAlchemy
+from flask_migrate import Migrate
+from werkzeug.security import generate_password_hash, check_password_hash
+import jwt
+import datetime
+import uuid
+import json
+from functools import wraps
+from flask_cors import CORS
+from knowledge_storm.collaborative_storm.engine import (
+    CollaborativeStormLMConfigs,
+    CoStormRunner
+)
+from knowledge_storm.utils import load_api_key
+import types
+
+app = Flask(__name__)
+CORS(app, supports_credentials=True)
+app.config['SECRET_KEY'] = 'your-secret-key'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///knowledge_storm.db'
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+
+db = SQLAlchemy(app)
+migrate = Migrate(app, db)
+
+# 数据库模型
+class User(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    username = db.Column(db.String(80), unique=True, nullable=False)
+    password = db.Column(db.String(120), nullable=False)
+    topics = db.relationship('Topic', backref='user', lazy=True)
+
+class Topic(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(120), nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    sessions = db.relationship('Session', backref='topic', lazy=True)
+    args = db.Column(db.Text)  # 存储序列化的运行参数
+
+class Session(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    session_id = db.Column(db.String(36), unique=True, nullable=False)
+    topic_id = db.Column(db.Integer, db.ForeignKey('topic.id'), nullable=False)
+    runner_state = db.Column(db.Text)  # 存储序列化的CoStormRunner状态
+    messages = db.relationship('Message', backref='session', lazy=True)
+    reports = db.relationship('Report', backref='session', lazy=True)
+
+class Message(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    content = db.Column(db.Text, nullable=False)
+    role = db.Column(db.String(20), nullable=False)
+    msg_type = db.Column(db.String(20), nullable=False)
+    timestamp = db.Column(db.DateTime, default=datetime.datetime.utcnow)
+    session_id = db.Column(db.Integer, db.ForeignKey('session.id'), nullable=False)
+
+class Report(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    content = db.Column(db.Text)
+    created_at = db.Column(db.DateTime, default=datetime.datetime.utcnow)
+    session_id = db.Column(db.Integer, db.ForeignKey('session.id'), nullable=False)
+
+# 辅助函数
+def token_required(f):
+    @wraps(f)
+    def decorated(*args, **kwargs):
+        token = request.headers.get('x-access-token')
+        if not token:
+            return jsonify({'message': 'Token is missing!'}), 401
+        try:
+            data = jwt.decode(token, app.config['SECRET_KEY'], algorithms=["HS256"])
+            current_user = User.query.get(data['user_id'])
+        except:
+            return jsonify({'message': 'Token is invalid!'}), 401
+        return f(current_user, *args, **kwargs)
+    return decorated
+
+def initialize_runner(args_dict, topic_name):
+    """初始化知识风暴运行器"""
+    load_api_key(toml_file_path='.config/secrets.toml')
+    lm_config = CollaborativeStormLMConfigs()
+    
+    # 转换参数
+    args = types.SimpleNamespace(**args_dict)
+    args.lm_configs = lm_config
+    args.topic = topic_name
+    
+    runner = CoStormRunner(args)
+    return runner
+
+@app.route('/api/me', methods=['GET'])
+@token_required
+def get_current_user_endpoint(current_user):
+    return jsonify({
+        'user_id': current_user.id,
+        'username': current_user.username#,
+        # 'created_at': current_user.date_created.isoformat()
+    })
+
+# 用户认证API
+@app.route('/api/register', methods=['POST'])
+def register():
+    data = request.json
+    if User.query.filter_by(username=data['username']).first():
+        return jsonify({'message': 'Username already exists!'}), 409
+        
+    hashed_password = generate_password_hash(data['password'])
+    new_user = User(username=data['username'], password=hashed_password)
+    db.session.add(new_user)
+    db.session.commit()
+    return jsonify({'message': 'Registered successfully!'}), 201
+
+@app.route('/api/login', methods=['POST'])
+def login():
+    data = request.json
+    user = User.query.filter_by(username=data['username']).first()
+    if not user or not check_password_hash(user.password, data['password']):
+        return jsonify({'message': 'Invalid credentials!'}), 401
+        
+    token = jwt.encode({
+        'user_id': user.id,
+        'exp': datetime.datetime.utcnow() + datetime.timedelta(hours=24)
+    }, app.config['SECRET_KEY'])
+    
+    return jsonify({'token': token})
+
+# 主题管理API
+@app.route('/api/topics', methods=['POST'])
+@token_required
+def create_topic(current_user):
+    data = request.json
+    new_topic = Topic(
+        name=data['name'],
+        user_id=current_user.id,
+        args=json.dumps(data.get('args', {})))
+    db.session.add(new_topic)
+    db.session.commit()
+    return jsonify({'message': 'Topic created', 'id': new_topic.id}), 201
+
+@app.route('/api/topics', methods=['GET'])
+@token_required
+def get_topics(current_user):
+    topics = Topic.query.filter_by(user_id=current_user.id).all()
+    return jsonify([{
+        'id': t.id,
+        'name': t.name,
+        'args': json.loads(t.args)
+    } for t in topics])
+
+# 会话管理API
+@app.route('/api/sessions', methods=['POST'])
+@token_required
+def create_session(current_user):
+    data = request.json
+    topic = Topic.query.filter_by(id=data['topic_id'], user_id=current_user.id).first()
+    if not topic:
+        return jsonify({'error': 'Topic not found'}), 404
+    
+    # 初始化知识风暴运行器
+    args_dict = json.loads(topic.args)
+    runner = initialize_runner(args_dict, topic.name)
+    
+    # 创建新会话
+    new_session = Session(
+        session_id=str(uuid.uuid4()),
+        topic_id=topic.id,
+        runner_state=json.dumps(runner.to_dict())
+    )
+    db.session.add(new_session)
+    
+    # 保存初始消息
+    init_message = Message(
+        content=f"New session started for topic: {topic.name}",
+        role="system",
+        msg_type="notification",
+        session=new_session
+    )
+    db.session.add(init_message)
+    db.session.commit()
+    
+    return jsonify({
+        'session_id': new_session.session_id,
+        'topic_id': topic.id
+    }), 201
+
+# 消息处理API
+@app.route('/api/sessions/<session_id>/step', methods=['POST'])
+@token_required
+def process_step(current_user, session_id):
+    session = Session.query.filter_by(session_id=session_id).first()
+    if not session or session.topic.user_id != current_user.id:
+        return jsonify({'error': 'Session not found'}), 404
+    
+    # 加载运行器状态
+    runner = CoStormRunner.from_dict(json.loads(session.runner_state))
+    
+    # 处理用户输入
+    data = request.json
+    user_input = data.get('input', '')
+    observation_mode = data.get('observation', False)
+    
+    if user_input:
+        # 保存用户消息
+        user_msg = Message(
+            content=user_input,
+            role="user",
+            msg_type="text",
+            session=session
+        )
+        db.session.add(user_msg)
+        runner.step(user_utterance=user_input)
+    
+    # 执行下一步
+    if observation_mode:
+        conv_turn = runner.step(observation_mode=True)
+    else:
+        conv_turn = runner.step()
+    
+    # 保存系统消息
+    system_msg = Message(
+        content=conv_turn.utterance,
+        role=conv_turn.role,
+        msg_type="text",
+        session=session
+    )
+    db.session.add(system_msg)
+    
+    # 更新运行器状态
+    session.runner_state = json.dumps(runner.to_dict())
+    db.session.commit()
+    
+    return jsonify({
+        'response': conv_turn.utterance,
+        'role': conv_turn.role
+    })
+
+# 报告生成API
+@app.route('/api/sessions/<session_id>/report', methods=['POST'])
+@token_required
+def generate_report(current_user, session_id):
+    session = Session.query.filter_by(session_id=session_id).first()
+    if not session or session.topic.user_id != current_user.id:
+        return jsonify({'error': 'Session not found'}), 404
+    
+    # 加载运行器状态
+    runner = CoStormRunner.from_dict(json.loads(session.runner_state))
+    
+    # 生成报告
+    runner.knowledge_base.reorganize()
+    report_content = runner.generate_report()
+    
+    # 保存报告
+    new_report = Report(
+        content=report_content,
+        session=session
+    )
+    db.session.add(new_report)
+    db.session.commit()
+    
+    return jsonify({
+        'report_id': new_report.id,
+        'content': report_content
+    })
+
+if __name__ == '__main__':
+    app.run(port=5000)#,debug=True)
