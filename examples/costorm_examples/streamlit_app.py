@@ -7,7 +7,7 @@ import streamlit.components.v1 as components
 import traceback
 import os
 
-BASE_API = "http://127.0.0.1:5000/api"
+BASE_API = os.getenv("BASE_API", "http://backend:5000/api")  # 优先使用环境变量
 
 # 新增自定义CSS样式
 def inject_custom_css():

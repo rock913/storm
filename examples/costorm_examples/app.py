@@ -26,13 +26,20 @@ from knowledge_storm.rm import (
 )
 from sqlalchemy.exc import SQLAlchemyError
 from flask_socketio import SocketIO, emit
+import time  # 新增导入
 
 
 app = Flask(__name__)
 CORS(app, supports_credentials=True)
 app.config['SECRET_KEY'] = 'your-secret-key'
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///knowledge_storm.db'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://storm:storm123@db:5432/storm'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+app.config['SQLALCHEMY_ENGINE_OPTIONS'] = {  # 新增连接池配置
+    'pool_size': 20,
+    'max_overflow': 10,
+    'pool_recycle': 3600,
+    'pool_pre_ping': True
+}
 
 db = SQLAlchemy(app)
 migrate = Migrate(app, db)
@@ -541,5 +548,30 @@ def get_session_reports(current_user, session_id):
         'created_at': report.created_at.isoformat()
     } for report in reports]), 200
 
+def wait_for_db():
+    max_retries = 5
+    retry_count = 0
+    while retry_count < max_retries:
+        try:
+            db.engine.execute('SELECT 1')
+            return True
+        except SQLAlchemyError:
+            retry_count += 1
+            time.sleep(2 ** retry_count)
+    return False
+
+# 健康检查端点
+@app.route('/healthcheck')
+def health_check():
+    try:
+        db.engine.execute('SELECT 1')
+        return jsonify({'status': 'healthy'}), 200
+    except SQLAlchemyError as e:
+        return jsonify({'status': 'unhealthy', 'error': str(e)}), 500
+
 if __name__ == '__main__':
-    app.run(port=5000)#,debug=True)
+    with app.app_context():
+        if not wait_for_db():
+            raise RuntimeError("无法连接数据库")
+        db.create_all()
+    app.run(host='0.0.0.0', port=5000)

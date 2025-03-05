@@ -1,0 +1,50 @@
+version: '3.8'
+
+services:
+  db:
+    image: postgres:15
+    environment:
+      POSTGRES_DB: storm
+      POSTGRES_USER: storm
+      POSTGRES_PASSWORD: storm123
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    networks:
+      - storm-net
+
+  backend:
+    build:
+      context: ../..
+      dockerfile: examples/costorm_examples/docker/backend.Dockerfile
+    environment:
+      FLASK_ENV: development
+      SQLALCHEMY_DATABASE_URI: postgresql://storm:storm123@db:5432/storm
+    depends_on:
+      - db
+    ports:
+      - "5000:5000"
+    networks:
+      - storm-net
+    volumes:
+      - ./.config:/app/.config
+      - ./migrations:/app/migrations
+
+  # frontend:
+  #   build:
+  #     context: .
+  #     dockerfile: docker/frontend.Dockerfile
+  #   environment:
+  #     BASE_API: http://backend:5000
+  #   depends_on:
+  #     - backend
+  #   ports:
+  #     - "8501:8501"
+  #   networks:
+  #     - storm-net
+
+volumes:
+  pgdata:
+
+networks:
+  storm-net:
+    driver: bridge

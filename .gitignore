@@ -28,3 +28,4 @@ secrets.toml
 # 新增屏蔽 DEMO_WORKING_DIR 文件夹和 .txt 文件
 DEMO_WORKING_DIR/
 *.txt
+*.db

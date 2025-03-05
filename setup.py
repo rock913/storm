@@ -13,7 +13,6 @@ with open("README.md", encoding="utf-8") as f:
 with open("requirements.txt", encoding="utf-8") as f:
     requirements = f.read().splitlines()
 
-
 setup(
     name="knowledge-storm",
     version="1.1.0",
